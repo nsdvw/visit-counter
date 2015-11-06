@@ -33,4 +33,14 @@ abstract class RedisAdapter
     {
         $this->keyExpire = $keyExpire;
     }
+
+    public function getKeyPrefix()
+    {
+        return $this->keyPrefix;
+    }
+
+    public function getKeyExpiration()
+    {
+        return $this->keyExpire;
+    }
 }

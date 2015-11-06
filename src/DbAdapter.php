@@ -2,7 +2,7 @@
 
 namespace VisitCounter;
 
-abstact class DbAdapter
+abstract class DbAdapter
 {
     protected $connection;
     protected $pk;

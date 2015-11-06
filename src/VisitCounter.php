@@ -10,7 +10,7 @@ class VisitCounter
 
     public function __construct(RedisAdapter $redisAdapter, $perTransaction = 1000)
     {
-        $this->client = $clientAdapter;
+        $this->client = $redisAdapter;
     }
 
     public function setDb(DbAdapter $dbAdapter)
@@ -20,9 +20,9 @@ class VisitCounter
 
     public function considerVisit($pageID, $userIP)
     {
-        $uniqueVisit = "{$this->client->keyPrefix}:{$pageID}:{$userIP}";
+        $uniqueVisit = "{$this->client->getKeyPrefix()}:{$pageID}:{$userIP}";
         if ($this->client->exists($uniqueVisit)) return;
-        $this->client->set($uniqueVisit, $keyValue, $this->client->keyExpire);
+        $this->client->set($uniqueVisit, $this->client->getKeyExpiration());
         $this->client->rpush($this->getQueueName(), $pageID);
     }
 
@@ -53,6 +53,6 @@ class VisitCounter
 
     protected function getQueueName()
     {
-        return "{$this->client->keyPrefix}Queue";
+        return "{$this->client->getKeyPrefix()}Queue";
     }
 }

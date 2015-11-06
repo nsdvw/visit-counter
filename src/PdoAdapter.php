@@ -14,5 +14,5 @@ class PdoAdapter extends DbAdapter
             $this->connection->prepare($sql);
             $this->connection->execute();
         }
-    }    
+    }
 }

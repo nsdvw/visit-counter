@@ -2,7 +2,7 @@
 
 namespace VisitCounter;
 
-class RediskaAdapter extends RedisClient
+class RediskaAdapter extends RedisAdapter
 {
     public function set($keyName, $expire = 0, $value = '')
     {
