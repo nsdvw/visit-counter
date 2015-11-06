@@ -17,7 +17,7 @@ abstract class RedisAdapter
         $this->keyExpire = $config['keyExpire'];
     }
 
-    abstract public function set($keyName, $value, $expire = 0);
+    abstract public function set($keyName, $expire = 0, $value = '');
     abstract public function exists($keyName);
     abstract public function rpush($listName, $value);
     abstract public function llen($listName);

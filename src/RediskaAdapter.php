@@ -4,7 +4,7 @@ namespace VisitCounter;
 
 class RediskaAdapter extends RedisClient
 {
-    public function set($keyName, $value = '', $expire = 0)
+    public function set($keyName, $expire = 0, $value = '')
     {
         $key = new \Rediska_Key($keyName);
         $key->setValue($value);

@@ -18,7 +18,7 @@ class VisitCounter
         $this->db = $dbAdapter;
     }
 
-    public function appendToQueue($pageID, $userIP, $keyValue = '')
+    public function considerVisit($pageID, $userIP)
     {
         $uniqueVisit = "{$this->client->keyPrefix}:{$pageID}:{$userIP}";
         if ($this->client->exists($uniqueVisit)) return;
