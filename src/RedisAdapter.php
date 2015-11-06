@@ -2,13 +2,19 @@
 
 namespace VisitCounter;
 
-abstract class RedisClient
+abstract class RedisAdapter
 {
-    protected $instance;
+    protected $client;
+    protected $keyPrefix;
+    protected $keyExpire;
 
-    public function __construct($options)
+    public function __construct(
+        $client,
+        $config = array('keyPrefix'=>'VisitCounter', 'keyExpire'=>0))
     {
-        $this->setInstance($options);
+        $this->client = $client;
+        $this->keyPrefix = $config['keyPrefix'];
+        $this->keyExpire = $config['keyExpire'];
     }
 
     abstract public function set($keyName, $value, $expire = 0);
@@ -17,6 +23,4 @@ abstract class RedisClient
     abstract public function llen($listName);
     abstract public function lrange($listName, $start = 0, $end = -1);
     abstract public function ltrim($listName, $start, $end = -1);
-
-    abstract protected function setInstance($options);
 }

@@ -2,7 +2,7 @@
 
 namespace VisitCounter;
 
-class Rediska extends RedisClient
+class RediskaAdapter extends RedisClient
 {
     public function set($keyName, $value = '', $expire = 0)
     {
@@ -13,7 +13,7 @@ class Rediska extends RedisClient
 
     public function exists($keyName)
     {
-        return $this->instance->exists($keyName);
+        return $this->client->exists($keyName);
     }
 
     public function rpush($listName, $value)
@@ -38,10 +38,5 @@ class Rediska extends RedisClient
     {
         $key = new \Rediska_Key_List($listName);
         $key->truncate($start, $end);
-    }
-
-    protected function setInstance($options)
-    {
-        $this->instance = new \Rediska($options);
     }
 }
