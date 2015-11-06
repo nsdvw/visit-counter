@@ -23,4 +23,14 @@ abstract class RedisAdapter
     abstract public function llen($listName);
     abstract public function lrange($listName, $start = 0, $end = -1);
     abstract public function ltrim($listName, $start, $end = -1);
+
+    public function setKeyPrefix($keyPrefix)
+    {
+        $this->keyPrefix = $keyPrefix;
+    }
+
+    public function setKeyExpiration($keyExpire)
+    {
+        $this->keyExpire = $keyExpire;
+    }
 }
