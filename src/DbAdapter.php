@@ -24,4 +24,19 @@ abstact class DbAdapter
     }
 
     abstract public function save(array $data);
+
+    public function setPk($pk)
+    {
+        $this->pk = $pk;
+    }
+
+    public function setTblName($tblName)
+    {
+        $this->tblName = $tblName;
+    }
+
+    public function setColName($colName)
+    {
+        $this->colName = $colName;
+    }
 }
