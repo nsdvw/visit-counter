@@ -38,9 +38,9 @@ class VisitCounter
         }
     }
 
-    protected function deleteFromQueue($queueName, $count)
+    protected function deleteFromQueue($count)
     {
-        $this->client->ltrim($queueName, $count);
+        $this->client->ltrim($this->getQueueName(), $count);
     }
 
     protected function prepareData(array $data)
