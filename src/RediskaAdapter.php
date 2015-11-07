@@ -4,16 +4,18 @@ namespace VisitCounter;
 
 class RediskaAdapter extends RedisAdapter
 {
-    public function set($keyName, $expire = 0, $value = '')
+    public function setnx($keyName, $expire = 0, $value = '')
     {
-        $key = new \Rediska_Key($keyName);
-        $key->setValue($value);
-        if ($expire) $key->expire($expire);
-    }
-
-    public function exists($keyName)
-    {
-        return $this->client->exists($keyName);
+        $command = new Rediska_Command_Set(
+            $this->client,
+            'Set',
+            array($keyName, $value, false)
+        );
+        $command();
+        if ($expire) {
+            $key = new \Rediska_Key($keyName);
+            $key->expire($expire);
+        }
     }
 
     public function rpush($listName, $value)

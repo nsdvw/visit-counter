@@ -4,15 +4,10 @@ namespace VisitCounter;
 
 class PredisAdapter extends RedisAdapter
 {
-    public function set($key, $expire = 0, $value = '')
+    public function setnx($key, $expire = 0, $value = '')
     {
-        $this->client->set($key, $value);
+        $this->client->setnx($key, $value);
         if ($expire) $this->client->expire($key, $expire);
-    }
-
-    public function exists($key)
-    {
-        return $this->client->exists($key);
     }
 
     public function rpush($key, $value)

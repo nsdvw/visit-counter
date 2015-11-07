@@ -21,8 +21,8 @@ class VisitCounter
     public function considerVisit($pageID, $userIP)
     {
         $uniqueVisit = "{$this->client->getKeyPrefix()}:{$pageID}:{$userIP}";
-        if ($this->client->exists($uniqueVisit)) return;
-        $this->client->set($uniqueVisit, $this->client->getKeyExpiration());
+        $setnx = $this->client->setnx($uniqueVisit, $this->client->getKeyExpiration());
+        if (!$setnx) return;
         $this->client->rpush($this->getQueueName(), $pageID);
     }
 
