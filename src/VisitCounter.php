@@ -4,11 +4,17 @@ namespace VisitCounter;
 
 class VisitCounter
 {
-    protected $perTransaction;
     protected $client;
     protected $db;
 
-    public function __construct(RedisAdapter $redisAdapter, $perTransaction = 1000)
+    private $perTransaction = 1000;
+    private $keyPrefix = '';
+    private $keyExpiration = 0;
+    private $pk;
+    private $tblName;
+    private $colName;
+
+    public function __construct(RedisAdapter $redisAdapter)
     {
         $this->client = $redisAdapter;
     }
@@ -20,8 +26,8 @@ class VisitCounter
 
     public function considerVisit($pageID, $userIP)
     {
-        $uniqueVisit = "{$this->client->getKeyPrefix()}:{$pageID}:{$userIP}";
-        $setnx = $this->client->setnx($uniqueVisit, $this->client->getKeyExpiration());
+        $uniqueVisit = "{$this->keyPrefix}:{$pageID}:{$userIP}";
+        $setnx = $this->client->setnx($uniqueVisit, $this->keyExpiration);
         if (!$setnx) return;
         $this->client->rpush($this->getQueueName(), $pageID);
     }
@@ -53,6 +59,36 @@ class VisitCounter
 
     protected function getQueueName()
     {
-        return "{$this->client->getKeyPrefix()}Queue";
+        return "{$this->keyPrefix}Queue";
+    }
+
+    public function setPerTransaction($perTransaction)
+    {
+        $this->perTransaction = $perTransaction;
+    }
+
+    public function setPk($pk)
+    {
+        $this->pk = $pk;
+    }
+
+    public function setTblName($tblName)
+    {
+        $this->tblName = $tblName;
+    }
+
+    public function setColName($colName)
+    {
+        $this->colName = $colName;
+    }
+
+    public function setKeyPrefix($keyPrefix)
+    {
+        $this->keyPrefix = $keyPrefix;
+    }
+
+    public function setKeyExpiration($keyExpiration)
+    {
+        $this->keyExpiration = $keyExpiration;
     }
 }
