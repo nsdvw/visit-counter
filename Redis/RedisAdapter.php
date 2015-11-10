@@ -1,6 +1,6 @@
 <?php
 
-namespace VisitCounter;
+namespace VisitCounter\Redis;
 
 abstract class RedisAdapter
 {

@@ -1,0 +1,6 @@
+{
+    "name": "nsdvw/visit-counter",
+    "autoload": {
+        "psr-4": {"VisitCounter\\": "./"}
+    }
+}

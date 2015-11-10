@@ -1,6 +1,6 @@
 <?php
 
-namespace VisitCounter;
+namespace VisitCounter\Db;
 
 class PdoAdapter extends DbAdapter
 {

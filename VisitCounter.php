@@ -9,12 +9,12 @@ class VisitCounter
 
     protected $perTransaction = 1000;
 
-    public function __construct(RedisAdapter $redisAdapter)
+    public function __construct(Redis\RedisAdapter $redisAdapter)
     {
         $this->client = $redisAdapter;
     }
 
-    public function setDb(DbAdapter $dbAdapter)
+    public function setDb(Db\DbAdapter $dbAdapter)
     {
         $this->db = $dbAdapter;
     }
