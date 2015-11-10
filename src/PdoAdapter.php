@@ -4,6 +4,10 @@ namespace VisitCounter;
 
 class PdoAdapter extends DbAdapter
 {
+    protected $pk = 'id';
+    protected $tblName;
+    protected $colName;
+
     public function save(array $data)
     {
         foreach ($data as $count => $pages) {
@@ -14,5 +18,20 @@ class PdoAdapter extends DbAdapter
             $this->connection->prepare($sql);
             $this->connection->execute();
         }
+    }
+
+    public function setPk($pk = 'id')
+    {
+        $this->pk = $pk;
+    }
+
+    public function setTblName($tblName)
+    {
+        $this->tblName = $tblName;
+    }
+
+    public function setColName($colName)
+    {
+        $this->colName = $colName;
     }
 }

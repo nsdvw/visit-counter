@@ -4,41 +4,48 @@ namespace VisitCounter;
 
 class RediskaAdapter extends RedisAdapter
 {
-    public function setnx($keyName, $expire = 0, $value = '')
+    public function addUniqueVisit($pageID, $userIP)
     {
-        $command = new Rediska_Command_Set(
+        if ($this->keyPrefix) {
+            $keyName = "{$this->keyPrefix}:{$pageID}:{$userIP}";
+        } else {
+            $keyName = "{$pageID}:{$userIP}";
+        }
+        $command = new \Rediska_Command_Set(
             $this->client,
             'Set',
-            array($keyName, $value, false)
+            array($keyName, '', false)
         );
-        $command();
-        if ($expire) {
+        if (!$command->execute()) return false;
+        if ($this->keyExpiration) {
             $key = new \Rediska_Key($keyName);
-            $key->expire($expire);
+            $key->expire($this->keyExpiration);
         }
+        return true;
     }
 
-    public function rpush($listName, $value)
+    public function appendToQueue($pageID)
     {
-        $key = new \Rediska_Key_List($listName);
-        $key->append($value);
+        $key = new \Rediska_Key_List($this->getQueueName());
+        if ($key->append($pageID)) return true;
+        return false;
     }
 
-    public function llen($listName)
+    public function getQueueLen()
     {
-        $key = new \Rediska_Key_List($listName);
+        $key = new \Rediska_Key_List($this->getQueueName());
         return $key->getLength();
     }
 
-    public function lrange($listName, $start = 0, $end = -1)
+    public function getFromQueue($count)
     {
-        $key = new \Rediska_Key_List($listName);
-        return $key->getValues($start, $end);
+        $key = new \Rediska_Key_List($this->getQueueName());
+        return $key->getValues(0, $count - 1);
     }
 
-    public function ltrim($listName, $start, $end = -1)
+    public function deleteFromQueue($count)
     {
-        $key = new \Rediska_Key_List($listName);
-        $key->truncate($start, $end);
+        $key = new \Rediska_Key_List($this->getQueueName());
+        $key->truncate(0, $count - 1);
     }
 }

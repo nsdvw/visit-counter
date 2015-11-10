@@ -7,12 +7,7 @@ class VisitCounter
     protected $client;
     protected $db;
 
-    private $perTransaction = 1000;
-    private $keyPrefix = '';
-    private $keyExpiration = 0;
-    private $pk;
-    private $tblName;
-    private $colName;
+    protected $perTransaction = 1000;
 
     public function __construct(RedisAdapter $redisAdapter)
     {
@@ -26,69 +21,41 @@ class VisitCounter
 
     public function considerVisit($pageID, $userIP)
     {
-        $uniqueVisit = "{$this->keyPrefix}:{$pageID}:{$userIP}";
-        $setnx = $this->client->setnx($uniqueVisit, $this->keyExpiration);
-        if (!$setnx) return;
-        $this->client->rpush($this->getQueueName(), $pageID);
+        if (!$this->client->addUniqueVisit()) return;
+        $this->client->appendToQueue($pageID);
     }
 
-    public function transferToDB()
+    public function moveToDB()
     {
-        $queueLen = $this->client->llen($this->getQueueName());
-        $bunchCount = intval(floor($queueLen/$this->perTransaction));
-        for ($i=0; $i < $bunchCount; $i++) {
-            $bunchOfPages = $this->client->lrange($this->getQueueName);
-            $sortedData = $this->prepareData($bunchOfPages);
-            $this->db->save($sortedData);
-            $this->deleteFromQueue($this->getQueueName(), $this->perTransaction);
+        $queueLen = $this->client->getQueueLen();
+        $batchCount = intval(floor($queueLen/$this->perTransaction));
+        for ($i=0; $i < $batchCount; $i++) {
+            $this->moveBatch($this->perTransaction);
+        }
+        $remainder = $queueLen % $this->perTransaction;
+        if ($remainder) {
+            $this->moveBatch($remainder);
         }
     }
 
-    protected function deleteFromQueue($count)
+    public function moveBatch($count)
     {
-        $this->client->ltrim($this->getQueueName(), $count);
+        $pages = $this->client->getFromQueue($count);
+        $visitsPages = $this->sortData($pages);
+        $this->db->save($visitsPages);
+        $this->client->deleteFromQueue($count);
     }
 
-    protected function prepareData(array $data)
+    protected function sortData(array $pages)
     {
-        foreach (array_count_values($data) as $key => $value) {
-            $sortedData[$value][] = $key;
+        foreach (array_count_values($pages) as $pageID => $visited) {
+            $visitsPages[$visited][] = $pageID;
         }
-        return $sortedData;
-    }
-
-    protected function getQueueName()
-    {
-        return "{$this->keyPrefix}Queue";
+        return $visitsPages;
     }
 
     public function setPerTransaction($perTransaction)
     {
         $this->perTransaction = $perTransaction;
-    }
-
-    public function setPk($pk)
-    {
-        $this->pk = $pk;
-    }
-
-    public function setTblName($tblName)
-    {
-        $this->tblName = $tblName;
-    }
-
-    public function setColName($colName)
-    {
-        $this->colName = $colName;
-    }
-
-    public function setKeyPrefix($keyPrefix)
-    {
-        $this->keyPrefix = $keyPrefix;
-    }
-
-    public function setKeyExpiration($keyExpiration)
-    {
-        $this->keyExpiration = $keyExpiration;
     }
 }
