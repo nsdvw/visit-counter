@@ -4,48 +4,42 @@ namespace VisitCounter\Redis;
 
 class RediskaAdapter extends RedisAdapter
 {
-    public function addUniqueVisit($pageID, $userIP)
+    public function setnx($keyName, $expire, $value = '')
     {
-        if ($this->keyPrefix) {
-            $keyName = "{$this->keyPrefix}:{$pageID}:{$userIP}";
-        } else {
-            $keyName = "{$pageID}:{$userIP}";
-        }
         $command = new \Rediska_Command_Set(
             $this->client,
             'Set',
-            array($keyName, '', false)
+            array($keyName, $value, false)
         );
-        if (!$command->execute()) return false;
-        if ($this->keyExpiration) {
+        if ( !$command->execute() ) return false; 
+        if ($expire) {
             $key = new \Rediska_Key($keyName);
-            $key->expire($this->keyExpiration);
+            $key->expire($expire);
         }
         return true;
     }
 
-    public function appendToQueue($pageID)
+    public function rpush($listName, $value)
     {
-        $key = new \Rediska_Key_List($this->getQueueName());
-        if ($key->append($pageID)) return true;
-        return false;
+        $key = new \Rediska_Key_List($listName);
+        return $key->append($value);
     }
 
-    public function getQueueLen()
+    public function llen($listName)
     {
-        $key = new \Rediska_Key_List($this->getQueueName());
+        $key = new \Rediska_Key_List($listName);
         return $key->getLength();
     }
 
-    public function getFromQueue($count)
+    public function lrange($listName, $start = 0, $end = -1)
     {
-        $key = new \Rediska_Key_List($this->getQueueName());
-        return $key->getValues(0, $count - 1);
+        $key = new \Rediska_Key_List($listName);
+        return $key->getValues($start, $end);
     }
 
-    public function deleteFromQueue($count)
+    public function ltrim($listName, $start = 0, $end = -1)
     {
-        $key = new \Rediska_Key_List($this->getQueueName());
-        $key->truncate(0, $count - 1);
+        $key = new \Rediska_Key_List($listName);
+        return $key->truncate($start, $end);
     }
 }

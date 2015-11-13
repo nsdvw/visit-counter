@@ -10,6 +10,10 @@ class PdoAdapter extends DbAdapter
 
     public function save(array $data)
     {
+        if (!$this->tblName or !$this->colName) {
+            $message = "Properties tblName and colName are mandatory.";
+            throw new \Exception($message);
+        }
         foreach ($data as $count => $pages) {
             $pageList = implode(',', $pages);
             $sql = "UPDATE {$this->tblName}
