@@ -1,5 +1,7 @@
 {
     "name": "nsdvw/visit-counter",
+    "description": "Simple visitor counter on redis, cross-client and extensible",
+    "licence": "MIT",
     "autoload": {
         "psr-4": {"VisitCounter\\": "./"}
     }
