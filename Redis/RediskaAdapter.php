@@ -4,6 +4,11 @@ namespace VisitCounter\Redis;
 
 class RediskaAdapter extends RedisAdapter
 {
+    public function __construct(\Rediska $client)
+    {
+        $this->client = $client;
+    }
+
     public function setnx($keyName, $expire, $value = '')
     {
         $command = new \Rediska_Command_Set(

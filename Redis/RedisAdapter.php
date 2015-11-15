@@ -6,11 +6,6 @@ abstract class RedisAdapter
 {
     protected $client;
 
-    public function __construct($client)
-    {
-        $this->client = $client;
-    }
-
     abstract public function setnx($keyName, $expire, $value = '');
     abstract public function rpush($listName, $value);
     abstract public function llen($listName);

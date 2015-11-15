@@ -17,11 +17,6 @@ class VisitCounter
         $this->client = $client;
     }
 
-    public function setDb(Db\DbAdapter $dbAdapter)
-    {
-        $this->db = $dbAdapter;
-    }
-
     public function countVisit($pageID, $userIP)
     {
         if ($this->keyPrefix) {
@@ -33,8 +28,9 @@ class VisitCounter
         $this->client->rpush($this->getQueueName(), $pageID);
     }
 
-    public function moveToDB()
+    public function moveToDB(DbAdapter $db)
     {
+        $this->db = $db;
         $queueLen = $this->client->llen($this->getQueueName());
         $batchCount = intval(floor($queueLen/$this->perTransaction));
         for ($i=0; $i < $batchCount; $i++) {
