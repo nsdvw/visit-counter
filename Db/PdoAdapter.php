@@ -8,16 +8,16 @@ class PdoAdapter extends DbAdapter
     protected $tblName;
     protected $colName;
 
-    public function save(array $data)
+    public function save(array $visitsPages)
     {
         if (!$this->tblName or !$this->colName) {
             $message = "Properties tblName and colName are mandatory.";
             throw new \Exception($message);
         }
-        foreach ($data as $count => $pages) {
+        foreach ($visitsPages as $visitCount => $pages) {
             $pageList = implode(',', $pages);
             $sql = "UPDATE {$this->tblName}
-                    SET {$this->colName} = {$this->colName} + $count
+                    SET {$this->colName} = {$this->colName} + $visitCount
                     WHERE {$this->pk} IN ({$pageList})";
             $this->connection->prepare($sql);
             $this->connection->execute();

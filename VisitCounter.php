@@ -7,6 +7,7 @@ class VisitCounter
     protected $client;
     protected $db;
 
+    protected $counterName = 'VisitCounter';
     protected $keyPrefix;
     protected $keyExpiration = 0;
 
@@ -26,6 +27,7 @@ class VisitCounter
         }
         if ( !$this->client->setnx($keyName, $this->keyExpiration) ) return;
         $this->client->rpush($this->getQueueName(), $pageID);
+        $this->client->hincrby($this->counterName, $pageID);
     }
 
     public function moveToDB(DbAdapter $db)
@@ -34,20 +36,30 @@ class VisitCounter
         $queueLen = $this->client->llen($this->getQueueName());
         $batchCount = intval(floor($queueLen/$this->perTransaction));
         for ($i=0; $i < $batchCount; $i++) {
-            $this->moveBatch($this->perTransaction);
+            $this->saveAndFlushCounter($this->perTransaction);
         }
         $remainder = $queueLen % $this->perTransaction;
         if ($remainder) {
-            $this->moveBatch($remainder);
+            $this->saveAndFlushCounter($remainder);
         }
     }
 
-    protected function moveBatch($count)
+    public function getDeltaVisits($pageID)
     {
-        $pages = $this->client->lrange(0, $count - 1);
+        return $this->client->hget($this->counterName, $pageID);
+    }
+
+    protected function saveAndFlushCounter($count);
+    {
+        $pages = $this->client->lrange($this->getQueueName(), 0, $count - 1);
         $visitsPages = $this->sortData($pages);
         $this->db->save($visitsPages);
         $this->client->ltrim($this->getQueueName(), $count);
+        foreach ($visitsPages as $visitCount => $pages) {
+            foreach ($pages as $pageID) {
+                $this->client->hincrby($this->counterName, $pageID, -$visitCount);
+            }
+        }
     }
 
     protected function sortData(array $pages)

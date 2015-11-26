@@ -47,4 +47,17 @@ class RediskaAdapter extends RedisAdapter
         $key = new \Rediska_Key_List($listName);
         return $key->truncate($start, $end);
     }
+
+    public function hincrby($hashName, $field, $count = 1)
+    {
+        $key = new \Rediska_Key_Hash($hashName);
+        if ($key->increment($field, $count)) return true;
+        return false;
+    }
+
+    public function hget($hashName, $field)
+    {
+        $key = new \Rediska_Key_Hash($hashName);
+        return $key->get($field);
+    }
 }
