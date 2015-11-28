@@ -12,15 +12,19 @@ class PdoAdapter extends DbAdapter
     {
         if (!$this->tblName or !$this->colName) {
             $message = "Properties tblName and colName are mandatory.";
-            throw new \Exception($message);
+            throw new \VisitCounter\Exception\Exception($message);
         }
-        foreach ($visitsPages as $visitCount => $pages) {
-            $pageList = implode(',', $pages);
-            $sql = "UPDATE {$this->tblName}
-                    SET {$this->colName} = {$this->colName} + $visitCount
-                    WHERE {$this->pk} IN ({$pageList})";
-            $this->connection->prepare($sql);
-            $this->connection->execute();
+        try {
+            foreach ($visitsPages as $visitCount => $pages) {
+                $pageList = implode(',', $pages);
+                $sql = "UPDATE {$this->tblName}
+                        SET {$this->colName} = {$this->colName} + $visitCount
+                        WHERE {$this->pk} IN ({$pageList})";
+                $this->connection->prepare($sql);
+                $this->connection->execute();
+            }
+        } catch (\PDOException $e) {
+            throw new \VisitCounter\Exception\Exception($e->getMessage(), 0, $e);
         }
     }
 
