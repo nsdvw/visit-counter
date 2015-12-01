@@ -2,17 +2,27 @@
 
 namespace VisitCounter\Db;
 
-class PdoAdapter extends DbAdapter
+class PdoAdapter implements DbAdapterInterface
 {
-    protected $pk = 'id';
+    private $connection;
+
+    protected $pk;
     protected $tblName;
     protected $colName;
+
+    public function __construct($connection, $tblName, $colName, $pk = 'id')
+    {
+        $this->connection = $connection;
+        $this->tblName = $tblName;
+        $this->colName = $colName;
+        $this->pk = $pk;
+    }
 
     public function save(array $visitsPages)
     {
         if (!$this->tblName or !$this->colName) {
             $message = "Properties tblName and colName are mandatory.";
-            throw new \VisitCounter\Exception\Exception($message);
+            throw new \VisitCounter\Exception\RedisException($message);
         }
         try {
             foreach ($visitsPages as $visitCount => $pages) {
@@ -24,22 +34,7 @@ class PdoAdapter extends DbAdapter
                 $this->connection->execute();
             }
         } catch (\PDOException $e) {
-            throw new \VisitCounter\Exception\Exception($e->getMessage(), 0, $e);
+            throw new \VisitCounter\Exception\DbException($e->getMessage(), 0, $e);
         }
-    }
-
-    public function setPk($pk = 'id')
-    {
-        $this->pk = $pk;
-    }
-
-    public function setTblName($tblName)
-    {
-        $this->tblName = $tblName;
-    }
-
-    public function setColName($colName)
-    {
-        $this->colName = $colName;
     }
 }

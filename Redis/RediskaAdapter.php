@@ -2,9 +2,9 @@
 
 namespace VisitCounter\Redis;
 
-class RediskaAdapter extends RedisAdapter
+class RediskaAdapter implements RedisAdapterInterface
 {
-    protected $errorMessage = "Redis error";
+    private $client;
 
     public function __construct(\Rediska $client)
     {
@@ -25,7 +25,7 @@ class RediskaAdapter extends RedisAdapter
                 $key->expire($expire);
             }
         } catch (\Rediska_Exception $e) {
-            throw new \VisitCounter\Exception\VCException($e->getMessage(), 0, $e);
+            throw new \VisitCounter\Exception\RedisException($e->getMessage(), 0, $e);
         }
         return true;
     }
@@ -36,7 +36,7 @@ class RediskaAdapter extends RedisAdapter
         try {
             $key->append($value);
         } catch (\Rediska_Exception $e) {
-            throw new \VisitCounter\Exception\VCException($e->getMessage(), 0, $e);
+            throw new \VisitCounter\Exception\RedisException($e->getMessage(), 0, $e);
         }
         return true;
     }
@@ -47,7 +47,7 @@ class RediskaAdapter extends RedisAdapter
         try {
             $length = $key->getLength();
         } catch (\Rediska_Exception $e) {
-            throw new \VisitCounter\Exception\VCException($e->getMessage(), 0, $e);
+            throw new \VisitCounter\Exception\RedisException($e->getMessage(), 0, $e);
         }
         return $length;
     }
@@ -58,7 +58,7 @@ class RediskaAdapter extends RedisAdapter
         try {
             $result = $key->getValues($start, $end);
         } catch (\Rediska_Exception $e) {
-            throw new \VisitCounter\Exception\VCException($e->getMessage(), 0, $e);
+            throw new \VisitCounter\Exception\RedisException($e->getMessage(), 0, $e);
         }
         return $result;
     }
@@ -69,7 +69,7 @@ class RediskaAdapter extends RedisAdapter
         try {
             $key->truncate($start, $end);
         } catch (\Rediska_Exception $e) {
-            throw new \VisitCounter\Exception\VCException($e->getMessage(), 0, $e);
+            throw new \VisitCounter\Exception\RedisException($e->getMessage(), 0, $e);
         }
         return true;
     }
@@ -80,7 +80,7 @@ class RediskaAdapter extends RedisAdapter
         try {
             $key->increment($field, $count);
         } catch (\Rediska_Exception $e) {
-            throw new \VisitCounter\Exception\VCException($e->getMessage(), 0, $e);
+            throw new \VisitCounter\Exception\RedisException($e->getMessage(), 0, $e);
         }
         return true;
     }
@@ -91,8 +91,8 @@ class RediskaAdapter extends RedisAdapter
         try {
             $result = $key->get($field);
         } catch (\Rediska_Exception $e) {
-            throw new \VisitCounter\Exception\VCException($e->getMessage(), 0, $e);
+            throw new \VisitCounter\Exception\RedisException($e->getMessage(), 0, $e);
         }
-        return true;
+        return $result;
     }
 }
