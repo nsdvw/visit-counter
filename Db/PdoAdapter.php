@@ -30,8 +30,8 @@ class PdoAdapter implements DbAdapterInterface
                 $sql = "UPDATE {$this->tblName}
                         SET {$this->colName} = {$this->colName} + $visitCount
                         WHERE {$this->pk} IN ({$pageList})";
-                $this->connection->prepare($sql);
-                $this->connection->execute();
+                $sth = $this->connection->prepare($sql);
+                $sth->execute();
             }
         } catch (\PDOException $e) {
             throw new \VisitCounter\Exception\DbException($e->getMessage(), 0, $e);

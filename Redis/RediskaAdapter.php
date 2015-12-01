@@ -19,7 +19,7 @@ class RediskaAdapter implements RedisAdapterInterface
             array($keyName, $value, false)
         );
         try {
-            $command->execute();
+            if ( !$command->execute() ) return false;
             $key = new \Rediska_Key($keyName);
             $key->expire($expire);
         } catch (\Rediska_Exception $e) {

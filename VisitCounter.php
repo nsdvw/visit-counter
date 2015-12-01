@@ -13,7 +13,7 @@ class VisitCounter
 
     protected $perTransaction = 1000;
 
-    public function __construct(Redis\RedisAdapter $client)
+    public function __construct(Redis\RedisAdapterInterface $client)
     {
         $this->client = $client;
     }
@@ -30,7 +30,7 @@ class VisitCounter
         $this->client->hincrby($this->counterName, $pageID);
     }
 
-    public function moveToDB(DbAdapter $db)
+    public function moveToDB(Db\DbAdapterInterface $db)
     {
         $this->db = $db;
         $queueLen = $this->client->llen($this->getQueueName());
@@ -46,10 +46,10 @@ class VisitCounter
 
     public function getDeltaVisits($pageID)
     {
-        return $this->client->hget($this->counterName, $pageID);
+        return $this->client->hmget($this->counterName, $pageID);
     }
 
-    protected function saveAndFlushCounter($count);
+    protected function saveAndFlushCounter($count)
     {
         $pages = $this->client->lrange($this->getQueueName(), 0, $count - 1);
         $visitsPages = $this->sortData($pages);
