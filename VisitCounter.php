@@ -9,7 +9,7 @@ class VisitCounter
 
     protected $counterName = 'VisitCounter';
     protected $keyPrefix;
-    protected $keyExpiration = 0;
+    protected $keyExpiration = 2592000;
 
     protected $perTransaction = 1000;
 

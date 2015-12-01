@@ -20,10 +20,8 @@ class RediskaAdapter implements RedisAdapterInterface
         );
         try {
             $command->execute();
-            if ($expire) {
-                $key = new \Rediska_Key($keyName);
-                $key->expire($expire);
-            }
+            $key = new \Rediska_Key($keyName);
+            $key->expire($expire);
         } catch (\Rediska_Exception $e) {
             throw new \VisitCounter\Exception\RedisException($e->getMessage(), 0, $e);
         }
