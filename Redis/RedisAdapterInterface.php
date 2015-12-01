@@ -10,5 +10,5 @@ interface RedisAdapterInterface
     public function lrange($listName, $start = 0, $end = -1);
     public function ltrim($listName, $start, $end = -1);
     public function hincrby($hashName, $field, $count = 1);
-    public function hget($hashName, $field);
+    public function hmget($hashName, array $fields);
 }

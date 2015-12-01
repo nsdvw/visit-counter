@@ -85,14 +85,14 @@ class RediskaAdapter implements RedisAdapterInterface
         return true;
     }
 
-    public function hget($hashName, $field)
+    public function hmget($hashName, array $fields)
     {
         $key = new \Rediska_Key_Hash($hashName);
         try {
-            $result = $key->get($field);
+            $result = $key->get($fields);
         } catch (\Rediska_Exception $e) {
             throw new \VisitCounter\Exception\RedisException($e->getMessage(), 0, $e);
         }
-        return $result;
+        return array_combine($fields, $result);
     }
 }
