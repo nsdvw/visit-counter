@@ -1,0 +1,103 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "This file is @generated automatically"
+    ],
+    "hash": "826e2457fc05380510fd1d3db56917a5",
+    "content-hash": "42055bc9b6d4d6c6cbfeb2a7c8f74ca5",
+    "packages": [
+        {
+            "name": "geometria-lab/rediska",
+            "version": "v0.5.10",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Shumkov/Rediska.git",
+                "reference": "5b33ba2f1526f9ad30864b42617e34ac370aeae0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Shumkov/Rediska/zipball/5b33ba2f1526f9ad30864b42617e34ac370aeae0",
+                "reference": "5b33ba2f1526f9ad30864b42617e34ac370aeae0",
+                "shasum": ""
+            },
+            "require-dev": {
+                "phpunit/phpunit": ">=3.7.11",
+                "zendframework/zendframework1": ">=1.12.1"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Rediska": [
+                        "library/",
+                        "tests/library/"
+                    ]
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "authors": [
+                {
+                    "name": "Maxim Ivanov",
+                    "email": "maximiv@gmail.com"
+                },
+                {
+                    "name": "Ryan Grenz",
+                    "email": "info@ryangrenz.com"
+                },
+                {
+                    "name": "Ivan Shumkov",
+                    "email": "ivan@shumkov.ru"
+                },
+                {
+                    "name": "Till Klampaeckel",
+                    "email": "till@php.net"
+                }
+            ],
+            "description": "Full-featured PHP client for key-value database Redis",
+            "keywords": [
+                "cache",
+                "redis",
+                "sessions",
+                "zend"
+            ],
+            "time": "2014-08-12 15:02:35"
+        },
+        {
+            "name": "nsdvw/visit-counter",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/nsdvw/visit-counter.git",
+                "reference": "7dc1ff516c1bb0855720a690d693e932ac2139a4"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/nsdvw/visit-counter/zipball/7dc1ff516c1bb0855720a690d693e932ac2139a4",
+                "reference": "7dc1ff516c1bb0855720a690d693e932ac2139a4",
+                "shasum": ""
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "VisitCounter\\": "./"
+                }
+            },
+            "description": "Simple visitor counter on redis, cross-client and extensible",
+            "support": {
+                "source": "https://github.com/nsdvw/visit-counter/tree/master",
+                "issues": "https://github.com/nsdvw/visit-counter/issues"
+            },
+            "time": "2015-12-01 23:44:58"
+        }
+    ],
+    "packages-dev": [],
+    "aliases": [],
+    "minimum-stability": "stable",
+    "stability-flags": {
+        "nsdvw/visit-counter": 20
+    },
+    "prefer-stable": false,
+    "prefer-lowest": false,
+    "platform": [],
+    "platform-dev": []
+}

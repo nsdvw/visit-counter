@@ -1,0 +1,19 @@
+body {
+    width: 400px;
+    margin: auto;
+}
+.counter {
+    border: 1px solid red;
+    padding: 4px;
+    float: left;
+}
+input {
+    padding: 4px;
+    float: left;
+    margin: 0 20px 20px;
+}
+.message {
+    clear: both;
+    font-style: italic;
+    color: 555;
+}

@@ -1,0 +1,15 @@
+{
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/nsdvw/visit-counter"
+        }
+    ],
+    "require": {
+        "geometria-lab/rediska": "^0.5.10",
+        "nsdvw/visit-counter": "dev-master"
+    },
+    "autoload": {
+        "files": ["app/Post.php"]
+    }
+}
